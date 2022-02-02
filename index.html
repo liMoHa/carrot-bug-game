@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Carrot and Bug Game</title>
+    <link
+      rel="stylesheet"
+      href="https://use.fontawesome.com/releases/v5.15.4/css/all.css"
+      integrity="sha384-DyZ88mC6Up2uqS4h/KRgHuoeGwBcD4Ng9SiP4dIRy0EXTlnuz47vAwmeGwVChigm"
+      crossorigin="anonymous"
+    />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Comforter&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="./style.css" />
+  </head>
+  <body>
+    <div class="info">
+      <button class="info__startBtn"><i class="fas fa-play"></i></button>
+      <button class="info__stopBtn invisible">
+        <i class="fas fa-stop"></i>
+      </button>
+      <div class="info__timer">
+        <!-- 시간 동적으로 받아와야 함. -->
+        <span class="info__minute">0</span>
+        <span>:</span>
+        <span class="second">10</span>
+      </div>
+      <div class="remaningCarrotNum">10</div>
+      <!-- carrot, bug test-->
+    </div>
+    <div class="replay invisible">
+      <div class="replay__box"></div>
+      <button class="replay__btn"><i class="fas fa-redo-alt"></i></button>
+      <!-- 1. replay, 2. you won ⭐, 3. you lost 😈 -->
+      <span class="replay__text">Replay ❓</span>
+    </div>
+
+    <img src="./img/carrot.png" alt="carrot" class="carrot" />
+    <img src="./img/bug.png" alt="bug" class="bug" />
+    <script src="./main.js" defer></script>
+  </body>
+</html>
