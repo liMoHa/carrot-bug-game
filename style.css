@@ -142,10 +142,9 @@ body {
 .container {
   position: absolute;
   top: 65%;
-  left: 2.5vw;
-  width: 95vw;
-  height: 32vh;
-  background-color: antiquewhite;
+  left: 5vw;
+  width: 90vw;
+  height: 25vh;
 }
 
 .container.active {
