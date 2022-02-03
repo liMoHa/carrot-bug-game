@@ -59,6 +59,7 @@ let timeIntervalID = null;
 function timer(text){
     // set timer (maybe 10s)
     time = 10;
+    second.innerHTML = time;
     timeIntervalID = setInterval(()=>{
         second.innerHTML = --time;
     }, 1000);
@@ -117,6 +118,8 @@ function startGame(){
     // show stop Btn
     startBtn.classList.add('invisible');
     stopBtn.classList.remove('invisible');
+    // remove existing all carrots and bugs
+    container.innerHTML = ``;
     // set remaining the number of carrots 
     remainingCarrotNum = 10;
     remainingCarrotNumElement.innerHTML = `<span>${remainingCarrotNum}</span>`;
