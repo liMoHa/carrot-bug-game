@@ -147,7 +147,13 @@ stopBtn.addEventListener('click', ()=>{
     replay.classList.remove('invisible');
 });
 
-
+const replayBtn = document.querySelector('.replay__btn');
+replayBtn.addEventListener('click', ()=>{
+    //hidden replay screen
+    replay.classList.add('invisible');
+    // remove exising all carrots and bugs 
+    startGame();
+});
 
 // document.addEventListener('click',(e)=>{
 //     console.log('x:', e.pageX);
