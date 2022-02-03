@@ -81,7 +81,7 @@ function timer(text){
             // 2. 사전에 벌레와 당근을 담는 container를 만들어서 active됐을 때 pointer-events를 none으로 설정한다.
             container.classList.add('active');
         }
-    },3000);
+    },10000);
 }
 
 function getRandomCoordinates(num){
@@ -131,45 +131,57 @@ function startGame(){
     makeSomething(getRandomCoordinates(7), "bug");
 }
 
-// when the start button is cliked
-startBtn.addEventListener('click', startGame);
-
-stopBtn.addEventListener('click', ()=>{
-    // hide stop button
-    stopBtn.classList.add('invisible');
+function stopGame(text){
     // stop timer
     clearTimeout(timeoutID);
     clearInterval(timeIntervalID);
     timeoutID = null;
     timeIntervalID = null;
+    // hide stop button
+    stopBtn.classList.add('invisible');
     // prevent clicking carrots and bugs
     container.classList.add('active');
     // show replay screen
-    replayText.innerHTML = `Replay ❓`
+    replayText.innerHTML = text
     replay.classList.remove('invisible');
+}
+
+// when the start button is cliked
+startBtn.addEventListener('click', startGame);
+stopBtn.addEventListener('click', () => {
+    stopGame('Replay ❓');
 });
 
 const replayBtn = document.querySelector('.replay__btn');
 replayBtn.addEventListener('click', ()=>{
     //hidden replay screen
     replay.classList.add('invisible');
-    // remove exising all carrots and bugs 
     startGame();
 });
 
-
-
-
-
-
-
-
-// document.addEventListener('click',(e)=>{
-//     console.log('x:', e.pageX);
-//     console.log('y:', e.pageY);
-
-// })
-
-// console.log('windowX', window.innerWidth);
-// console.log('windowY', window.innerHeight);
+container.addEventListener('click', (e)=>{
+    // when the carrot is clicked
+    if(e.target.className === 'carrot'){
+        // remaining carrots -1 
+        remainingCarrotNum--;
+        remainingCarrotNumElement.innerHTML = `<span>${remainingCarrotNum}</span>`;
+        // hide carrots
+        // 방법1. class추가해서 css만 변경
+        e.target.classList.add('clicked');
+        // 방법2. e.target을 아예 parent노드에서 삭제
+        // -> 방법1로 함
+        // when the remaning number of carrots are zero.
+        if(remainingCarrotNum <= 0){
+            stopGame("😍👍 You won 🎉⭐");
+        }
+    }
+    // when the bug is clicked
+    else if(e.target.className === 'bug'){
+        // stopGame
+        stopGame('You lost 😈');
+    }
+    else{
+        return;
+    }
+});
 

@@ -157,19 +157,13 @@ body {
   cursor: pointer;
   position: absolute;
   transform: translate(-50%, -50%);
-  /* top, left값은 동적으로 바뀔 예정 */
 }
 
 .carrot.clicked {
   /* display: none; */
   opacity: 0;
   pointer-events: none;
-  transition: all 0.2 ease;
-}
-
-.carrot.nonclicked,
-.bug.nonclicked {
-  pointer-events: none;
+  transition: all 0.2s ease;
 }
 
 .carrot:hover,
