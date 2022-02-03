@@ -42,6 +42,7 @@ retry버튼 누르면 == start btn
 
 'use strict'
 
+// element
 const startBtn = document.querySelector('.info__startBtn');
 const stopBtn = document.querySelector('.info__stopBtn');
 const remainingCarrotNumElement = document.querySelector('.info__remainingCarrotNum');
@@ -50,11 +51,19 @@ const replay = document.querySelector('.replay');
 const replayText = document.querySelector('.replay__text');
 const container = document.querySelector('.container');
 const containerRect = container.getBoundingClientRect();
+// the number of sth
 let remainingCarrotNum = 8; // global
 const bugNum = 7;
+// time
 let time = 10;
 let timeoutID = null;
 let timeIntervalID = null;
+// sound
+const backgroundSound = new Audio('./sound/bg.mp3');
+const stopSound = new Audio('./sound/alert.wav');
+const winGameSound = new Audio('./sound/game_win.mp3');
+const lostGameSound = new Audio('./sound/bug_pull.mp3');
+const carrotPullSound = new Audio('./sound/carrot_pull.mp3');
 
 function timer(text){
     // set timer (maybe 10s)
@@ -69,6 +78,8 @@ function timer(text){
         /* 계속 가동 중일 때만 이걸 실행 만약 스탑 버튼을 눌르거나 버그를 눌렀을
          경우에는 이게 적용되면 안 됨. */
         if(timeIntervalID){
+            backgroundSound.pause();
+            lostGameSound.play();
             clearInterval(timeIntervalID); // stop counting
             timeIntervalID = null;
             // replay 화면 보여주기 you lost text로 바꾼 후에!
@@ -113,6 +124,7 @@ function makeSomething(array, name){
 }
 
 function startGame(){
+    backgroundSound.play();
     // set timer
     timer('You lost 😈');
     // remove pointer-event
@@ -132,6 +144,7 @@ function startGame(){
 }
 
 function stopGame(text){
+    backgroundSound.pause();
     // stop timer
     clearTimeout(timeoutID);
     clearInterval(timeIntervalID);
@@ -149,6 +162,7 @@ function stopGame(text){
 // when the start button is cliked
 startBtn.addEventListener('click', startGame);
 stopBtn.addEventListener('click', () => {
+    stopSound.play();
     stopGame('Replay ❓');
 });
 
@@ -162,6 +176,7 @@ replayBtn.addEventListener('click', ()=>{
 container.addEventListener('click', (e)=>{
     // when the carrot is clicked
     if(e.target.className === 'carrot'){
+        carrotPullSound.play();
         // remaining carrots -1 
         remainingCarrotNum--;
         remainingCarrotNumElement.innerHTML = `<span>${remainingCarrotNum}</span>`;
@@ -172,13 +187,16 @@ container.addEventListener('click', (e)=>{
         // -> 방법1로 함
         // when the remaning number of carrots are zero.
         if(remainingCarrotNum <= 0){
+            winGameSound.play();
             stopGame("😍👍 You won 🎉⭐");
         }
     }
     // when the bug is clicked
     else if(e.target.className === 'bug'){
         // stopGame
+        lostGameSound.play();
         stopGame('You lost 😈');
+
     }
     else{
         return;
