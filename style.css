@@ -12,17 +12,18 @@ button {
   cursor: pointer;
 }
 
-html {
+body {
   background-image: url(./img/background.png);
   background-size: cover;
   height: 100vh;
+  overflow: hidden;
 }
 
 /* info */
 .info {
   display: flex;
   flex-direction: column;
-  margin-top: 20px;
+  padding-top: 20px;
   align-items: center;
 }
 
@@ -35,16 +36,17 @@ html {
   margin-bottom: 10px;
 }
 
+.info button.invisible {
+  opacity: 0;
+  pointer-events: none;
+}
+
 .info button i {
   font-size: 25px;
 }
 
-.info__startBtn.invisible {
-  display: none;
-}
-
-.info__stopBtn.invisible {
-  display: none;
+.info__stopBtn {
+  position: absolute;
 }
 
 .info__timer {
@@ -58,7 +60,7 @@ html {
   font-size: 25px;
 }
 
-.info__remaningCarrotNum {
+.info__remainingCarrotNum {
   border: 2px solid white;
   padding: 10px;
   background-color: coral;
@@ -67,7 +69,7 @@ html {
   height: 60px;
 }
 
-.info__remaningCarrotNum span {
+.info__remainingCarrotNum span {
   font-size: 30px;
   width: 100%;
   height: 100%;
@@ -85,6 +87,7 @@ html {
   transform: translate(-50%, -50%);
   width: 500px;
   height: 200px;
+  z-index: 1;
 }
 
 .replay.invisible {
@@ -137,7 +140,7 @@ html {
 .bug {
   cursor: pointer;
   position: absolute;
-  top: 55%;
+  transform: translate(-50%, -50%);
   /* top, left값은 동적으로 바뀔 예정 */
 }
 
@@ -150,5 +153,5 @@ html {
 
 .carrot:hover,
 .bug:hover {
-  transform: scale(1.1, 1.1);
+  transform: translate(-50%, -50%) scale(1.1, 1.1);
 }
