@@ -129,6 +129,21 @@ function startGame(){
 // when the start button is cliked
 startBtn.addEventListener('click', startGame);
 
+stopBtn.addEventListener('click', ()=>{
+    // hide stop button
+    stopBtn.classList.add('invisible');
+    // stop timer
+    clearTimeout(timeoutID);
+    clearInterval(timeIntervalID);
+    timeoutID = null;
+    timeIntervalID = null;
+    // prevent clicking carrots and bugs
+    container.classList.add('active');
+    // show replay screen
+    replayText.innerHTML = `Replay ❓`
+    replay.classList.remove('invisible');
+});
+
 
 
 // document.addEventListener('click',(e)=>{
