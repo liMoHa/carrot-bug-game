@@ -138,6 +138,20 @@ body {
   color: white;
 }
 
+/* container */
+.container {
+  position: absolute;
+  top: 65%;
+  left: 2.5vw;
+  width: 95vw;
+  height: 32vh;
+  background-color: antiquewhite;
+}
+
+.container.active {
+  pointer-events: none;
+}
+
 /* carrot, but */
 .carrot,
 .bug {
@@ -152,6 +166,11 @@ body {
   opacity: 0;
   pointer-events: none;
   transition: all 0.2 ease;
+}
+
+.carrot.nonclicked,
+.bug.nonclicked {
+  pointer-events: none;
 }
 
 .carrot:hover,
