@@ -32,12 +32,12 @@ retry버튼 누르면 == start btn
     1. remaningCarrotNum-1 
     2. play "carrot_pull" sound
 
-```
-
 당근 개수가 0이 되면
-    1. 타이머 멈춤
-    2. you won으로 텍스트 바꿔서 retry화면 보이기
-    3. play "game_win" sound
+1. 타이머 멈춤
+2. you won으로 텍스트 바꿔서 retry화면 보이기
+3. play "game_win" sound
+
+```
 */
 
 'use strict'
@@ -115,6 +115,8 @@ function makeSomething(array, name){
 function startGame(){
     // set timer
     timer('You lost 😈');
+    // remove pointer-event
+    container.classList.remove('active');
     // show stop Btn
     startBtn.classList.add('invisible');
     stopBtn.classList.remove('invisible');
@@ -154,6 +156,13 @@ replayBtn.addEventListener('click', ()=>{
     // remove exising all carrots and bugs 
     startGame();
 });
+
+
+
+
+
+
+
 
 // document.addEventListener('click',(e)=>{
 //     console.log('x:', e.pageX);
