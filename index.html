@@ -18,31 +18,20 @@
       rel="stylesheet"
     />
     <link rel="stylesheet" href="./style.css" />
+    <script src="./main.js" defer></script>
   </head>
   <body>
-    <div class="info">
-      <button class="info__startBtn"><i class="fas fa-play"></i></button>
-      <button class="info__stopBtn invisible">
-        <i class="fas fa-stop"></i>
-      </button>
-      <div class="info__timer">
-        <!-- 시간 동적으로 받아와야 함. -->
-        <span class="info__minute">0</span>
-        <span>:</span>
-        <span class="second">10</span>
-      </div>
-      <div class="info__remainingCarrotNum"><span>10</span></div>
-      <!-- carrot, bug test-->
-    </div>
-    <div class="replay invisible">
-      <div class="replay__box"></div>
-      <button class="replay__btn"><i class="fas fa-redo-alt"></i></button>
-      <!-- 1. replay, 2. you won ⭐, 3. you lost 😈 -->
-      <span class="replay__text">Replay ❓</span>
-    </div>
-    <div class="container"></div>
-    <!-- <img src="./img/bug.png" alt="bug" class="bug" /> -->
-
-    <script src="./main.js" defer></script>
+    <section class="game">
+      <header class="game__header">
+        <button class="game__button"><i class="fas fa-play"></i></button>
+        <span class="game__timer"></span>
+        <span class="game__score"></span>
+      </header>
+      <div class="game__field"></div>
+    </section>
+    <section class="pop-up">
+      <button class="pop-up__refresh"><i class="fas fa-redo"></i></button>
+      <span class="pop-up__message"></span>
+    </section>
   </body>
 </html>
