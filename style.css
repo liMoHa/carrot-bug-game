@@ -63,6 +63,10 @@ button:hover {
   user-select: none;
 }
 
+.game__timer.invisible {
+  opacity: 0;
+}
+
 .game__score {
   margin-top: 10px;
   width: 40px;
@@ -75,6 +79,10 @@ button:hover {
   text-align: center;
   line-height: 40px;
   user-select: none;
+}
+
+.game__score.invisible {
+  opacity: 0;
 }
 
 .game__field {
