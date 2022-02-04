@@ -17,21 +17,33 @@
       href="https://fonts.googleapis.com/css2?family=Comforter&display=swap"
       rel="stylesheet"
     />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Lobster&display=swap"
+      rel="stylesheet"
+    />
     <link rel="stylesheet" href="./style.css" />
     <script src="./main.js" defer></script>
   </head>
   <body>
     <section class="game">
       <header class="game__header">
-        <button class="game__button"><i class="fas fa-play"></i></button>
-        <span class="game__timer"></span>
-        <span class="game__score"></span>
+        <button class="game__button">
+          <i class="fas fa-play"></i>
+        </button>
+        <span class="game__timer">0:0</span>
+        <span class="game__score">15</span>
       </header>
-      <div class="game__field"></div>
+      <div class="game__field">
+        <img class="carrot" src="./img/carrot.png" alt="" />
+      </div>
     </section>
     <section class="pop-up">
-      <button class="pop-up__refresh"><i class="fas fa-redo"></i></button>
-      <span class="pop-up__message"></span>
+      <button class="pop-up__refresh">
+        <i class="fas fa-redo"></i>
+      </button>
+      <span class="pop-up__message">you won</span>
     </section>
   </body>
 </html>
