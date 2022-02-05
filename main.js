@@ -1,205 +1,170 @@
-/*
-***event timing***
+'use strice';
 
-start버튼 누르면
-    1. 타이머 가동
-    2. 당근, 벌레 랜덤 위치 설정
-    3. remaningCarrotNum 초기화
-    4. start btn 숨기고 stop btn 보이기
-    5. play "bg" sound
-    6. 시간이 끝나면
-        1. you lost로 텍스트 바꿔서 retry화면 보이기
-        2. 시작 버튼 없애기
+const CARROT_SIZE = 80;
+const CARROT_COUNT = 15;
+const BUG_COUNT = 15;
+const TIME_VALUE = 10;
 
-stop버튼 누르면
-    1. 타이머 멈춤
-    2. retry화면 보이기
-    3. stop 버튼 숨기기
+const button = document.querySelector('.game__button');
+const timer = document.querySelector('.game__timer');
+const score = document.querySelector('.game__score');
+const field = document.querySelector('.game__field');
+const fieldRect = field.getBoundingClientRect();
+const popUp = document.querySelector('.pop-up--hide');
+const refreshBtn = document.querySelector('.pop-up__refresh');
+const message = document.querySelector('.pop-up__message');
 
-retry버튼 누르면 == start btn
-    1. 타이머 초기화 및 재가동
-    2. 당근, 벌레 위치 재설정
-    3. remaningCarrotNum 초기화
-    4. stop btn보이기
+const bgSound = new Audio("./sound/bg.mp3");
+const alertSound = new Audio("./sound/alert.wav");
+const bugPullSound = new Audio("./sound/bug_pull.mp3");
+const carrotPullSound = new Audio("./sound/carrot_pull.mp3");
+const gameWinSound = new Audio("./sound/game_win.mp3");
 
-``` event deligation    
-벌레 클릭하면
-    1. 타이머 멈춤
-    2. you lost로 텍스트 바꿔서 retry화면 보이기
-    3. play "bug_pull" sound 
+let started = false;
+let interverID = undefined;
+let time = TIME_VALUE;
+let clickedCarrot = 0;
 
-당근 클릭하면
-    1. remaningCarrotNum-1 
-    2. play "carrot_pull" sound
-
-당근 개수가 0이 되면
-1. 타이머 멈춤
-2. you won으로 텍스트 바꿔서 retry화면 보이기
-3. play "game_win" sound
-
-```
-*/
-
-'use strict'
-
-// element
-const startBtn = document.querySelector('.info__startBtn');
-const stopBtn = document.querySelector('.info__stopBtn');
-const remainingCarrotNumElement = document.querySelector('.info__remainingCarrotNum');
-const second = document.querySelector('.info__timer .second');
-const replay = document.querySelector('.replay');
-const replayText = document.querySelector('.replay__text');
-const container = document.querySelector('.container');
-const containerRect = container.getBoundingClientRect();
-// the number of sth
-let remainingCarrotNum = 8; // global
-const bugNum = 7;
-// time
-let time = 10;
-let timeoutID = null;
-let timeIntervalID = null;
-// sound
-const backgroundSound = new Audio('./sound/bg.mp3');
-const stopSound = new Audio('./sound/alert.wav');
-const winGameSound = new Audio('./sound/game_win.mp3');
-const lostGameSound = new Audio('./sound/bug_pull.mp3');
-const carrotPullSound = new Audio('./sound/carrot_pull.mp3');
-
-function timer(text){
-    // set timer (maybe 10s)
-    time = 10;
-    second.innerHTML = time;
-    timeIntervalID = setInterval(()=>{
-        second.innerHTML = --time;
-    }, 1000);
-    
-    // be called after 10 second
-    timeoutID = setTimeout(()=>{
-        /* 계속 가동 중일 때만 이걸 실행 만약 스탑 버튼을 눌르거나 버그를 눌렀을
-         경우에는 이게 적용되면 안 됨. */
-        if(timeIntervalID){
-            backgroundSound.pause();
-            lostGameSound.play();
-            clearInterval(timeIntervalID); // stop counting
-            timeIntervalID = null;
-            // replay 화면 보여주기 you lost text로 바꾼 후에!
-            replayText.innerHTML = `${text}` // 이거 변수로 받아야 함. ⭐⭐⭐
-            replay.classList.remove('invisible');
-            // startBtn 숨기기
-            stopBtn.classList.add('invisible'); 
-            // 벌레, 당근 클릭 안 되게 하기
-            // 1. 모든 요소를 가져와서 일일이 classList.add해준다
-            // 2. 사전에 벌레와 당근을 담는 container를 만들어서 active됐을 때 pointer-events를 none으로 설정한다.
-            container.classList.add('active');
-        }
-    },10000);
-}
-
-function getRandomCoordinates(num){
-    // 1. 영역 계산하기 
-    let minX = 0;
-    let maxX = containerRect.width;
-    let minY = 0;
-    let maxY = containerRect.height; 
-    // 2. randome값으로 x, y값을 담은 배열 만들기
-    let array = [];
-    for(let i=0; i<num; i++){
-        let randomX = Math.floor(Math.random() * (maxX - minX + 1)) + minX;
-        let randomY = Math.floor(Math.random() * (maxY - minY + 1)) + minY;
-        array[i] = [randomX, randomY]; // 이게 가능하구나
-    }
-    return array;
-}
-
-function makeSomething(array, name){
-    // 3. forEach돌리면서 body의 자식 or 새롭게 영역을 만들어서 그 자식으로 만들기
-    array.forEach((coordinates) => {
-        const element = document.createElement('img');
-        element.setAttribute('src' , `./img/${name}.png `);
-        element.setAttribute('class' , `${name}`);
-        element.style.top = `${coordinates[1]}px`;
-        element.style.left = `${coordinates[0]}px`;
-        container.append(element);
-    });
-}
+button.addEventListener('click', ()=>{
+    if(started) stopGame("Replay?");
+    else startGame();
+});
+refreshBtn.addEventListener('click', ()=>{
+    showButton();
+    hidePopUp();
+    startGame();
+});
+field.addEventListener('click', onFieldClick);
 
 function startGame(){
-    backgroundSound.play();
-    // set timer
-    timer('You lost 😈');
-    // remove pointer-event
-    container.classList.remove('active');
-    // show stop Btn
-    startBtn.classList.add('invisible');
-    stopBtn.classList.remove('invisible');
-    // remove existing all carrots and bugs
-    container.innerHTML = ``;
-    // set remaining the number of carrots 
-    remainingCarrotNum = 10;
-    remainingCarrotNumElement.innerHTML = `<span>${remainingCarrotNum}</span>`;
-    // make carrots and bugs with their num
-    // 여기서 영역을 만드는 게 좋을까 아니면 html안에서 만들어 놓는 게 좋을까? 
-    makeSomething(getRandomCoordinates(remainingCarrotNum), "carrot");
-    makeSomething(getRandomCoordinates(7), "bug");
+    started = true;
+    bgSound.currentTime = 0;
+    bgSound.play();
+    showScore();
+    startTimer();
+    changeBtn();
+    initItem();
 }
 
 function stopGame(text){
-    backgroundSound.pause();
-    // stop timer
-    clearTimeout(timeoutID);
-    clearInterval(timeIntervalID);
-    timeoutID = null;
-    timeIntervalID = null;
-    // hide stop button
-    stopBtn.classList.add('invisible');
-    // prevent clicking carrots and bugs
-    container.classList.add('active');
-    // show replay screen
-    replayText.innerHTML = text
-    replay.classList.remove('invisible');
-}
-
-// when the start button is cliked
-startBtn.addEventListener('click', startGame);
-stopBtn.addEventListener('click', () => {
-    stopSound.play();
-    stopGame('Replay ❓');
-});
-
-const replayBtn = document.querySelector('.replay__btn');
-replayBtn.addEventListener('click', ()=>{
-    //hidden replay screen
-    replay.classList.add('invisible');
-    startGame();
-});
-
-container.addEventListener('click', (e)=>{
-    // when the carrot is clicked
-    if(e.target.className === 'carrot'){
-        carrotPullSound.play();
-        // remaining carrots -1 
-        remainingCarrotNum--;
-        remainingCarrotNumElement.innerHTML = `<span>${remainingCarrotNum}</span>`;
-        // hide carrots
-        // 방법1. class추가해서 css만 변경
-        e.target.classList.add('clicked');
-        // 방법2. e.target을 아예 parent노드에서 삭제
-        // -> 방법1로 함
-        // when the remaning number of carrots are zero.
-        if(remainingCarrotNum <= 0){
-            winGameSound.play();
-            stopGame("😍👍 You won 🎉⭐");
-        }
+    started = false;
+    if(text === 'You won'){
+        gameWinSound.play();
     }
-    // when the bug is clicked
-    else if(e.target.className === 'bug'){
-        // stopGame
-        lostGameSound.play();
-        stopGame('You lost 😈');
-
+    else if(text === 'You lost'){
+        bugPullSound.play();
     }
     else{
+        alertSound.play();
+    }
+    bgSound.pause();
+    stopTimer();
+    showPopUp(text);
+    hideButton();
+}
+
+// 타이머 설정 다시 확인
+function startTimer(){
+    let remainingTimeSec = TIME_VALUE;
+    showTimer(remainingTimeSec);
+    interverID = setInterval(()=>{
+        showTimer(--remainingTimeSec);
+        if(time  <= 0) {
+            stopGame('You lost');
+        }
+    }, 1000);
+}
+
+function stopTimer(){
+    clearInterval(interverID);
+}
+
+function showTimer(){
+    let minute =  Math.floor(time / 60);
+    let second = time % 60;
+    timer.innerText = `${minute} : ${second}`;
+    timer.style.visibility = `visible`;
+}
+
+function showScore(){
+    score.style.visibility = `visible`;
+    score.innerText = `${CARROT_COUNT}`
+}
+
+function showPopUp(text){
+    message.innerText = text;
+    popUp.classList.remove('pop-up--hide');
+}
+
+function hidePopUp(){
+    popUp.classList.add('pop-up--hide');
+}
+
+function showButton(){
+    button.style.visibility = `visible`;
+}
+
+function hideButton(){
+    button.style.visibility = `hidden`;
+
+}
+
+function changeBtn(){
+    const startBtn = document.querySelector('.game__button i');
+    startBtn.classList.remove('fa-play');
+    startBtn.classList.add('fa-stop');
+}
+
+function updateScore(){
+    score.innerText = `${CARROT_COUNT - clickedCarrot}`;
+}
+
+function initItem(){
+    field.innerHTML = ``;
+    clickedCarrot = 0;
+    putItem('carrot', CARROT_COUNT, './img/carrot.png');
+    putItem('bug', BUG_COUNT, './img/bug.png');
+}
+
+function putItem(className, count, imgPath ){
+    const x1 = 0;
+    const y1 = 0;
+    const x2 = fieldRect.width - CARROT_SIZE;
+    const y2 = fieldRect.height - CARROT_SIZE;
+    for(let i=0; i<count; i++){
+        let x = random(x1, x2);
+        let y = random(y1, y2);
+        const img = document.createElement('img');
+        img.setAttribute('class', className);
+        img.setAttribute('src', imgPath);
+        img.style.position = `absolute`;
+        img.style.left = `${x}px`;
+        img.style.top = `${y}px`;
+        field.appendChild(img);
+    }
+}
+
+function random(min, max) {
+    min = Math.ceil(min);
+    max = Math.floor(max);
+    return Math.floor(Math.random() * (max - min + 1)) + min; //최댓값도 포함, 최솟값도 포함
+}
+
+function onFieldClick(event){
+    if(!started){
         return;
     }
-});
-
+    const target = event.target;
+    if(target.matches('.carrot')){
+        carrotPullSound.currentTime = 0;
+        carrotPullSound.play();
+        target.remove();
+        clickedCarrot++;
+        updateScore();
+        if(clickedCarrot === CARROT_COUNT){
+            stopGame('You won');
+        }
+    } else if(target.matches('.bug')){
+        stopGame("You lost");
+    }
+}

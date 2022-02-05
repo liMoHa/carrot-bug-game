@@ -46,11 +46,6 @@ button:hover {
   padding: 20px;
 }
 
-.game__button.invisible {
-  opacity: 0;
-  pointer-events: none;
-}
-
 .game__timer {
   margin-top: 10px;
   background-color: var(--color-white);
@@ -61,10 +56,7 @@ button:hover {
   border: solid 3px var(--color-black);
   border-radius: 3px;
   user-select: none;
-}
-
-.game__timer.invisible {
-  opacity: 0;
+  visibility: hidden;
 }
 
 .game__score {
@@ -79,10 +71,7 @@ button:hover {
   text-align: center;
   line-height: 40px;
   user-select: none;
-}
-
-.game__score.invisible {
-  opacity: 0;
+  visibility: hidden;
 }
 
 .game__field {
@@ -94,6 +83,7 @@ button:hover {
 
 /* pop up */
 .pop-up {
+  display: block;
   text-align: center;
   width: 80vw;
   height: 230px;
@@ -105,10 +95,11 @@ button:hover {
   /* 엘리님 이거 left설정 어떻게 했지 */
 }
 
-/* pop-up--hide vs pop-up.invisible 이 방식의 차이점..? */
 .pop-up--hide {
   display: none;
 }
+
+/* pop-up--hide vs pop-up.invisible 이 방식의 차이점..? */
 
 .pop-up__refresh {
   margin-top: 20px;
@@ -124,7 +115,7 @@ button:hover {
 
 .carrot,
 .bug {
-  transition: all 200ms ease;
+  transition: all 100ms ease;
 }
 
 .carrot:hover,
