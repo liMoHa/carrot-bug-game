@@ -1,3 +1,4 @@
+// start refactoring
 'use strice';
 
 const CARROT_SIZE = 80;
@@ -22,7 +23,6 @@ const gameWinSound = new Audio("./sound/game_win.mp3");
 
 let started = false;
 let interverID = undefined;
-let time = TIME_VALUE;
 let clickedCarrot = 0;
 
 button.addEventListener('click', ()=>{
@@ -38,8 +38,7 @@ field.addEventListener('click', onFieldClick);
 
 function startGame(){
     started = true;
-    bgSound.currentTime = 0;
-    bgSound.play();
+    playSound(bgSound);
     showScore();
     startTimer();
     changeBtn();
@@ -49,15 +48,15 @@ function startGame(){
 function stopGame(text){
     started = false;
     if(text === 'You won'){
-        gameWinSound.play();
+        playSound(gameWinSound);
     }
     else if(text === 'You lost'){
-        bugPullSound.play();
+        playSound(bugPullSound);
     }
     else{
-        alertSound.play();
+        playSound(alertSound)
     }
-    bgSound.pause();
+    pauseSound(bgSound);
     stopTimer();
     showPopUp(text);
     hideButton();
@@ -69,7 +68,7 @@ function startTimer(){
     showTimer(remainingTimeSec);
     interverID = setInterval(()=>{
         showTimer(--remainingTimeSec);
-        if(time  <= 0) {
+        if(remainingTimeSec <= 0) {
             stopGame('You lost');
         }
     }, 1000);
@@ -79,9 +78,9 @@ function stopTimer(){
     clearInterval(interverID);
 }
 
-function showTimer(){
-    let minute =  Math.floor(time / 60);
-    let second = time % 60;
+function showTimer(remainingTimeSec){
+    let minute =  Math.floor(remainingTimeSec / 60);
+    let second = remainingTimeSec % 60;
     timer.innerText = `${minute} : ${second}`;
     timer.style.visibility = `visible`;
 }
@@ -156,8 +155,7 @@ function onFieldClick(event){
     }
     const target = event.target;
     if(target.matches('.carrot')){
-        carrotPullSound.currentTime = 0;
-        carrotPullSound.play();
+        playSound(carrotPullSound);
         target.remove();
         clickedCarrot++;
         updateScore();
@@ -167,4 +165,13 @@ function onFieldClick(event){
     } else if(target.matches('.bug')){
         stopGame("You lost");
     }
+}
+
+function playSound(audio){
+    audio.currentTime = 0;
+    audio.play();
+}
+
+function pauseSound(audio){
+    audio.pause();
 }
