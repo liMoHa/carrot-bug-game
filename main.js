@@ -1,6 +1,8 @@
 // start refactoring
 'use strice';
 
+import PopUp from './popUp.js';
+
 const CARROT_SIZE = 80;
 const CARROT_COUNT = 15;
 const BUG_COUNT = 15;
@@ -11,9 +13,6 @@ const timer = document.querySelector('.game__timer');
 const score = document.querySelector('.game__score');
 const field = document.querySelector('.game__field');
 const fieldRect = field.getBoundingClientRect();
-const popUp = document.querySelector('.pop-up--hide');
-const refreshBtn = document.querySelector('.pop-up__refresh');
-const message = document.querySelector('.pop-up__message');
 
 const bgSound = new Audio("./sound/bg.mp3");
 const alertSound = new Audio("./sound/alert.wav");
@@ -25,15 +24,20 @@ let started = false;
 let interverID = undefined;
 let clickedCarrot = 0;
 
+const gameFinishBanner = new PopUp();
+gameFinishBanner.eventClickFunction(showButton, startGame);
+
 button.addEventListener('click', ()=>{
     if(started) stopGame("Replay?");
     else startGame();
 });
-refreshBtn.addEventListener('click', ()=>{
-    showButton();
-    hidePopUp();
-    startGame();
-});
+
+// refreshBtn.addEventListener('click', ()=>{
+//     showButton();
+//     hidePopUp();
+//     startGame();
+// });
+
 field.addEventListener('click', onFieldClick);
 
 function startGame(){
@@ -58,7 +62,7 @@ function stopGame(text){
     }
     pauseSound(bgSound);
     stopTimer();
-    showPopUp(text);
+    gameFinishBanner.showPopUp(text);
     hideButton();
 }
 
@@ -88,15 +92,6 @@ function showTimer(remainingTimeSec){
 function showScore(){
     score.style.visibility = `visible`;
     score.innerText = `${CARROT_COUNT}`
-}
-
-function showPopUp(text){
-    message.innerText = text;
-    popUp.classList.remove('pop-up--hide');
-}
-
-function hidePopUp(){
-    popUp.classList.add('pop-up--hide');
 }
 
 function showButton(){
