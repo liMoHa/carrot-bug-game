@@ -30,17 +30,17 @@ function initItem(){
     gameField.init();
 }
 
-function onItemClick(target){
+function onItemClick(targetName){
     if(!started){
         return;
     }
-    if(target.matches('.carrot')){
+    if(targetName === 'carrot'){
         clickedCarrot++;
         updateScore();
         if(clickedCarrot === CARROT_COUNT){
             stopGame('You won');
         }
-    } else if(target.matches('.bug')){
+    } else if(targetName === 'bug'){
         stopGame("You lost");
     }
 }

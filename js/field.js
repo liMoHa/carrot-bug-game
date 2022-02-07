@@ -9,28 +9,24 @@ export default class Field{
         
         this.field = document.querySelector('.game__field');
         this.fieldRect = this.field.getBoundingClientRect();
+        // this.onClick = this.onClick.bind(this);
         this.field.addEventListener('click', this.onClick);
     }
-
+    
     // 함수 주소만 전달해주는 것이기 때문에 인자는 신경 ㄴㄴ
     setClickListener(onItemClick){
         this.onItemClick = onItemClick; // binding
-        // console.log("this.onItemClick", this.onItemClick);
-        // const.onClick이랑 뭔 차이지...?
+        // this.onItemClick = this.onItemClick.bind(this);
     }
 
-    onClick(event){
+    onClick = event => {
         const target = event.target;
-        console.log("this.onItemClick", this.onItemClick);
         if(target.matches('.carrot')){
             sound.playCarrot();
             target.remove();
-            // this.onClick('carrot');
-            console.log(this.onItemClick(target)); // undefined되는 이유..?
-            this.onItemClick && this.onItemClick(target);
+            this.onItemClick && this.onItemClick('carrot');
         } else if(target.matches('.bug')){
-            // this.onClick('bug');
-            this.onItemClick && this.onItemClick(target);
+            this.onItemClick && this.onItemClick('bug');
         }
     }
 
