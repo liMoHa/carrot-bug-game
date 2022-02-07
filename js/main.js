@@ -2,103 +2,28 @@
 'use strice';
 
 import PopUp from './popUp.js';
-import Timer from './timer.js';
-import Field from './field.js';
-import * as sound from './sound.js';
-
-const CARROT_SIZE = 80;
-const CARROT_COUNT = 15;
-const BUG_COUNT = 15;
-const TIME_VALUE = 10;
-
-const score = document.querySelector('.game__score');
-const button = document.querySelector('.game__button');
-
-
-let started = false;
-let clickedCarrot = 0;
+import Game from './game.js';
 
 const gameFinishBanner = new PopUp();
-gameFinishBanner.eventClickFunction(startGame);
-const gameTimer = new Timer(TIME_VALUE);
+const game = new Game(3, 3, 3);
 
-const gameField = new Field(CARROT_SIZE, CARROT_COUNT, BUG_COUNT);
-gameField.setClickListener(onItemClick);
-
-function initItem(){
-    clickedCarrot = 0;
-    gameField.init();
-}
-
-function onItemClick(targetName){
-    if(!started){
-        return;
-    }
-    if(targetName === 'carrot'){
-        clickedCarrot++;
-        updateScore();
-        if(clickedCarrot === CARROT_COUNT){
-            stopGame('You won');
-        }
-    } else if(targetName === 'bug'){
-        stopGame("You lost");
-    }
-}
-
-button.addEventListener('click', ()=>{
-    if(started) stopGame("Replay?");
-    else startGame();
+// 이렇게 작성하는 게 익숙해지도록 하자. 함수가 변수에 저장되고 전달되고 하는 게 가능해서 이런 게 됨...ㅎㄷㄷㄷ
+game.onStopListener((text)=>{
+    gameFinishBanner.showPopUp(text);
 });
 
-function startGame(){
-    started = true;
-    sound.playBg();
-    showButton();
-    showScore();
-    initItem();
-    changeBtn();
-    gameTimer.startTimer();
+gameFinishBanner.eventClickFunction(() => game.start());
+
+
+
+/*
+
+function setClickListener(onClick){
+    this.onClick = onclick;
 }
 
-export function stopGame(text){
-    started = false;
-    if(text === 'You won'){
-        sound.playGameWin();
-    }
-    else if(text === 'You lost'){
-        sound.playBug();
-    }
-    else{
-        sound.playAlert();
-    }
-    sound.pauseBg();
-    gameTimer.stopTimer();
-    gameFinishBanner.showPopUp(text);
-    hideButton();
+function a(){
+    this.onclick();
 }
 
-
-
-function showScore(){
-    score.style.visibility = `visible`;
-    score.innerText = `${CARROT_COUNT}`
-}
-
-function showButton(){
-    button.style.visibility = `visible`;
-}
-
-function hideButton(){
-    button.style.visibility = `hidden`;
-
-}
-
-function changeBtn(){
-    const startBtn = document.querySelector('.game__button i');
-    startBtn.classList.remove('fa-play');
-    startBtn.classList.add('fa-stop');
-}
-
-function updateScore(){
-    score.innerText = `${CARROT_COUNT - clickedCarrot}`;
-}
+*/

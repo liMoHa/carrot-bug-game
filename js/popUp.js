@@ -6,12 +6,12 @@ export default class PopUp{
         this.message = document.querySelector('.pop-up__message');
         this.refreshBtn.addEventListener('click', ()=>{
             this.hidePopUp();
-            this.onClick1();
+            this.onClick();
         });
     }
     
-    eventClickFunction(onClick1){
-        this.onClick1 = onClick1;
+    eventClickFunction(onClick){
+        this.onClick = onClick;
     }
 
     showPopUp(text){

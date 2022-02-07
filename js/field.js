@@ -1,9 +1,10 @@
 'use strict'
 import * as sound from './sound.js';
 
+const CARROT_SIZE = 80;
+
 export default class Field{
-    constructor(CARROT_SIZE, CARROT_COUNT, BUG_COUNT){
-        this.carrotSize = CARROT_SIZE;
+    constructor(CARROT_COUNT, BUG_COUNT){
         this.carrotCount = CARROT_COUNT;
         this.bugCount = BUG_COUNT;
         
@@ -15,18 +16,15 @@ export default class Field{
     
     // 함수 주소만 전달해주는 것이기 때문에 인자는 신경 ㄴㄴ
     setClickListener(onItemClick){
-        this.onItemClick = onItemClick; // binding
-        // this.onItemClick = this.onItemClick.bind(this);
+        this.onItemClick = onItemClick;
     }
 
-    onClick = event => {
+    onClick = (event) => {
         const target = event.target;
         if(target.matches('.carrot')){
-            sound.playCarrot();
-            target.remove();
-            this.onItemClick && this.onItemClick('carrot');
+            this.onItemClick && this.onItemClick(target); // 왜 빨간색이야...?
         } else if(target.matches('.bug')){
-            this.onItemClick && this.onItemClick('bug');
+            this.onItemClick && this.onItemClick(target);
         }
     }
 
@@ -39,8 +37,8 @@ export default class Field{
     _putItem(className, count, imgPath ){
         const x1 = 0;
         const y1 = 0;
-        const x2 = this.fieldRect.width - this.carrotSize;
-        const y2 = this.fieldRect.height - this.carrotSize;
+        const x2 = this.fieldRect.width - CARROT_SIZE;
+        const y2 = this.fieldRect.height - CARROT_SIZE;
         for(let i=0; i<count; i++){
             let x = random(x1, x2);
             let y = random(y1, y2);
@@ -55,6 +53,7 @@ export default class Field{
     }
 }
 
+// static function
 function random(min, max) {
     min = Math.ceil(min);
     max = Math.floor(max);
