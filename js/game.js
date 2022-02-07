@@ -1,8 +1,33 @@
 import Field from './field.js';
 import * as sound from './sound.js';
 
+export default class GameBuilder{
+    gameCarrotCount(carrotCount){
+        this.carrotCount = carrotCount;
+        return this;
+    }
 
-export default class Game{
+    gameBugCount(bugCount){
+        this.bugCount = bugCount;
+        return this;
+    }
+
+    gameTimeDuration(timeDuration){
+        this.timeDuration = timeDuration;
+        return this;
+    }
+
+    gameBuild(){
+        return new Game(
+            this.carrotCount, 
+            this.bugCount, 
+            this.timeDuration
+        );
+    }
+
+}
+
+class Game{
     constructor(CARROT_COUNT, BUG_COUNT, TIME_VALUE){
         this.started = false;
         this.clickedCarrot = 0;
@@ -66,7 +91,6 @@ export default class Game{
         sound.pauseBg();
         this.stopTimer();
         this.hideButton();
-        console.log(text);
 
         // gameFinishBanner.showPopUp(text);// 얘 다른 걸로 변경
         this.onStop && this.onStop(text);
