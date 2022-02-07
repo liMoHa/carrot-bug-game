@@ -1,7 +1,13 @@
 import Field from './field.js';
 import * as sound from './sound.js';
 
-export default class GameBuilder{
+export const Reason = Object.freeze({
+    win: "win",
+    lose: "lose",
+    cancel: "cancel",
+});
+
+export class GameBuilder{
     gameCarrotCount(carrotCount){
         this.carrotCount = carrotCount;
         return this;
@@ -29,20 +35,25 @@ export default class GameBuilder{
 
 class Game{
     constructor(CARROT_COUNT, BUG_COUNT, TIME_VALUE){
-        this.started = false;
-        this.clickedCarrot = 0;
         this.carrotCount = CARROT_COUNT;
+        this.timeValue = TIME_VALUE; // 이런 상수 값은 어디에 속해야 하지?
+        
         this.gameField = new Field(CARROT_COUNT, BUG_COUNT);
         this.gameField.setClickListener(this.onItemClick);
-        this.button = document.querySelector('.game__button');
+        
         this.score = document.querySelector('.game__score');
+        
         this.timer = document.querySelector('.game__timer');
         this.interverID = undefined;
-        this.timeValue = TIME_VALUE; // 이런 상수 값은 어디에 속해야 하지?
+        
+        this.button = document.querySelector('.game__button');
         this.button.addEventListener('click', ()=>{
-            if(this.started) this.stop("Replay?");
+            if(this.started) this.stop(Reason.cancel); // be called when the stop button is clicked.
             else this.start();
         });
+
+        this.started = false;
+        this.clickedCarrot = 0;
         // 그러니까 한 번 호출되면 이후부터는 this 함수가 아니라는 얘기지?
     }
 
@@ -60,10 +71,10 @@ class Game{
             this.clickedCarrot++;
             this.updateScore();
             if(this.clickedCarrot === this.carrotCount){
-                this.stop('You won');
+                this.stop(Reason.win); // is called when all carrots are clicked.
             }
         } else if(target.matches('.bug')){
-            this.stop("You lost");
+            this.stop(Reason.lose); // is called when any bug clicked.
         }
     }
     
@@ -77,23 +88,13 @@ class Game{
         this.startTimer();
     }
     
-    stop(text){
+    stop(reason){
         this.started = false;
-        if(text === 'You won'){
-            sound.playGameWin();
-        }
-        else if(text === 'You lost'){
-            sound.playBug();
-        }
-        else{
-            sound.playAlert();
-        }
-        sound.pauseBg();
         this.stopTimer();
         this.hideButton();
-
+        sound.pauseBg();
         // gameFinishBanner.showPopUp(text);// 얘 다른 걸로 변경
-        this.onStop && this.onStop(text);
+        this.onStop && this.onStop(reason);
     }
 
     initItem(){
@@ -108,7 +109,7 @@ class Game{
         this.interverID = setInterval(()=>{
             this.showTimer(--remainingTimeSec);
             if(remainingTimeSec <= 0) {
-                this.stop('You lost');// 여기 정리할 순 없나
+                this.stop(this.clickedCarrot <= this.carrotCount ?  Reason.lose : Reason.win); // is called when the timer is over
             }
         }, 1000);
     }
