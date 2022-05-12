@@ -36,7 +36,7 @@ export class GameBuilder{
 class Game{
     constructor(CARROT_COUNT, BUG_COUNT, TIME_VALUE){
         this.carrotCount = CARROT_COUNT;
-        this.timeValue = TIME_VALUE; // 이런 상수 값은 어디에 속해야 하지?
+        this.timeValue = TIME_VALUE;
         
         this.gameField = new Field(CARROT_COUNT, BUG_COUNT);
         this.gameField.setClickListener(this.onItemClick);
@@ -48,13 +48,12 @@ class Game{
         
         this.button = document.querySelector('.game__button');
         this.button.addEventListener('click', ()=>{
-            if(this.started) this.stop(Reason.cancel); // be called when the stop button is clicked.
+            if(this.started) this.stop(Reason.cancel);
             else this.start();
         });
 
         this.started = false;
         this.clickedCarrot = 0;
-        // 그러니까 한 번 호출되면 이후부터는 this 함수가 아니라는 얘기지?
     }
 
     onStopListener(onStop){
@@ -71,10 +70,10 @@ class Game{
             this.clickedCarrot++;
             this.updateScore();
             if(this.clickedCarrot === this.carrotCount){
-                this.stop(Reason.win); // is called when all carrots are clicked.
+                this.stop(Reason.win);
             }
         } else if(target.matches('.bug')){
-            this.stop(Reason.lose); // is called when any bug clicked.
+            this.stop(Reason.lose); 
         }
     }
     
@@ -93,7 +92,6 @@ class Game{
         this.stopTimer();
         this.hideButton();
         sound.pauseBg();
-        // gameFinishBanner.showPopUp(text);// 얘 다른 걸로 변경
         this.onStop && this.onStop(reason);
     }
 
@@ -102,14 +100,13 @@ class Game{
         this.gameField.init();
     }
 
-    // 인자 전달 받을 땐...?
     startTimer(){
         let remainingTimeSec = this.timeValue;
         this.showTimer(remainingTimeSec);
         this.interverID = setInterval(()=>{
             this.showTimer(--remainingTimeSec);
             if(remainingTimeSec <= 0) {
-                this.stop(this.clickedCarrot <= this.carrotCount ?  Reason.lose : Reason.win); // is called when the timer is over
+                this.stop(this.clickedCarrot <= this.carrotCount ?  Reason.lose : Reason.win);
             }
         }, 1000);
     }

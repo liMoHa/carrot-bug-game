@@ -7,14 +7,11 @@ export default class Field{
     constructor(CARROT_COUNT, BUG_COUNT){
         this.carrotCount = CARROT_COUNT;
         this.bugCount = BUG_COUNT;
-        
         this.field = document.querySelector('.game__field');
         this.fieldRect = this.field.getBoundingClientRect();
-        // this.onClick = this.onClick.bind(this);
         this.field.addEventListener('click', this.onClick);
     }
     
-    // 함수 주소만 전달해주는 것이기 때문에 인자는 신경 ㄴㄴ
     setClickListener(onItemClick){
         this.onItemClick = onItemClick;
     }
@@ -22,7 +19,7 @@ export default class Field{
     onClick = (event) => {
         const target = event.target;
         if(target.matches('.carrot')){
-            this.onItemClick && this.onItemClick(target); // 왜 빨간색이야...?
+            this.onItemClick && this.onItemClick(target); 
         } else if(target.matches('.bug')){
             this.onItemClick && this.onItemClick(target);
         }
@@ -53,9 +50,8 @@ export default class Field{
     }
 }
 
-// static function
 function random(min, max) {
     min = Math.ceil(min);
     max = Math.floor(max);
-    return Math.floor(Math.random() * (max - min + 1)) + min; //최댓값도 포함, 최솟값도 포함
+    return Math.floor(Math.random() * (max - min + 1)) + min; 
 }
